@@ -1,7 +1,10 @@
 import unittest
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from pages.login_page import LoginPage
 from pages.home_page import HomePage
+from pages.dropdown_page import DropdownPage
+from pages.textarea_page import TextareaPage
 from dotenv import load_dotenv
 import os
 
@@ -45,6 +48,18 @@ class StackOverflowTestSuite(unittest.TestCase):
         for url in urls:
             home_page.navigate_to(url)
             self.assertTrue(self.driver.title)
+
+    def test_complex_xpath(self):
+        home_page = HomePage(self.driver)
+        home_page.navigate()
+        complex_element = home_page.find_element((By.XPATH, "//div//a[@href='/questions']"))
+        self.assertTrue(complex_element, "Complex XPath element should be found")
+
+    def test_explicit_wait(self):
+        home_page = HomePage(self.driver)
+        home_page.navigate()
+        element = home_page.find_element((By.XPATH, "//a[contains(@href, '/questions')]"), timeout=15)
+        self.assertTrue(element, "Element should be present with explicit wait")
 
 if __name__ == '__main__':
     unittest.main()
