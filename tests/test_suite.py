@@ -1,5 +1,6 @@
 import unittest
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from pages.login_page import LoginPage
 from pages.home_page import HomePage
@@ -18,8 +19,24 @@ class StackOverflowTestSuite(unittest.TestCase):
     login_success = False
 
     def setUp(self):
-        """Initialize the WebDriver and maximize the window."""
-        self.driver = webdriver.Chrome()
+        """Initialize the WebDriver with custom browser options and maximize the window."""
+        chrome_options = Options()
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--disable-popup-blocking")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--window-size=1920,1080")
+
+        prefs = {
+            "profile.default_content_settings.popups": 0,
+            "download.default_directory": os.path.abspath("downloads"),
+            "download.prompt_for_download": False,
+            "download.directory_upgrade": True,
+            "safebrowsing.enabled": True
+        }
+        chrome_options.add_experimental_option("prefs", prefs)
+
+        self.driver = webdriver.Chrome(options=chrome_options)
         self.driver.maximize_window()
 
     def tearDown(self):

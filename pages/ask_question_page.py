@@ -46,7 +46,7 @@ class AskQuestionPage(BasePage):
             {
                 'name': 'OptanonConsent',
                 'value': self.OPTANON_CONSENT,
-                'domain': '.stackoverflow.com',
+                'domain': 'stackoverflow.com',
                 'path': '/',
                 'secure': True,
                 'httpOnly': False
@@ -54,7 +54,7 @@ class AskQuestionPage(BasePage):
             {
                 'name': 'eupubconsent-v2',
                 'value': self.EUPUBCONSENT_V2,
-                'domain': '.stackoverflow.com',
+                'domain': 'stackoverflow.com',
                 'path': '/',
                 'secure': True,
                 'httpOnly': False
