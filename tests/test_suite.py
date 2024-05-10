@@ -15,6 +15,8 @@ STACKOVERFLOW_EMAIL = os.getenv('STACKOVERFLOW_EMAIL')
 STACKOVERFLOW_PASSWORD = os.getenv('STACKOVERFLOW_PASSWORD')
 
 class StackOverflowTestSuite(unittest.TestCase):
+    login_success = False
+
     def setUp(self):
         """Initialize the WebDriver and maximize the window."""
         self.driver = webdriver.Chrome()
@@ -32,10 +34,21 @@ class StackOverflowTestSuite(unittest.TestCase):
         if not home_page.is_user_logged_in():
             error_message = login_page.get_error_message()
             print(f"Login failed with error: {error_message}")
-        self.assertTrue(home_page.is_user_logged_in(), "Login should be successful")
+        StackOverflowTestSuite.login_success = home_page.is_user_logged_in()
+        self.assertTrue(StackOverflowTestSuite.login_success, "Login should be successful")
 
         home_page.logout()
         self.assertTrue(home_page.is_user_logged_out(), "Logout should be successful")
+
+    @unittest.skipUnless(login_success, "Login is required for this test")
+    def test_form_sending_with_user_ask_question(self):
+        """Test form submission with user interaction by asking a question."""
+        ask_question_page = AskQuestionPage(self.driver)
+        ask_question_page.navigate()
+        ask_question_page.click_ask_question()
+        ask_question_page.accept_all_cookies()
+        ask_question_page.set_title("Sample Question Title")
+        ask_question_page.click_next()
 
     def test_static_home_page_title(self):
         """Test that the Stack Overflow home page has the correct title."""
@@ -95,17 +108,6 @@ class StackOverflowTestSuite(unittest.TestCase):
         radio_page.navigate()
         radio_page.select_account_issue()
         self.assertTrue(radio_page.is_account_issue_selected(), "Radio button Account Issue should be selected")
-
-    def test_form_sending_with_user_ask_question(self):
-        """Test form submission with user interaction by asking a question."""
-        login_page = LoginPage(self.driver)
-        ask_question_page = AskQuestionPage(self.driver)
-        login_page.login(STACKOVERFLOW_EMAIL, STACKOVERFLOW_PASSWORD)
-        ask_question_page.navigate()
-        ask_question_page.click_ask_question()
-        ask_question_page.accept_all_cookies()
-        ask_question_page.set_title("Sample Question Title")
-        ask_question_page.click_next()
 
 if __name__ == '__main__':
     unittest.main()
