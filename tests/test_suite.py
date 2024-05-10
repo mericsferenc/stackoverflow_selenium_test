@@ -44,9 +44,8 @@ class StackOverflowTestSuite(unittest.TestCase):
     def test_form_sending_with_user_ask_question(self):
         """Test form submission with user interaction by asking a question."""
         ask_question_page = AskQuestionPage(self.driver)
-        ask_question_page.navigate()
+        ask_question_page.avoid_cookie_consent_popup()
         ask_question_page.click_ask_question()
-        ask_question_page.accept_all_cookies()
         ask_question_page.set_title("Sample Question Title")
         ask_question_page.click_next()
 
@@ -82,7 +81,7 @@ class StackOverflowTestSuite(unittest.TestCase):
             home_page.navigate_to(page["url"])
             self.assertIn(page["expected_text"], self.driver.page_source)
 
-    def test_follow_us_dropdown_can_select_blog(self):
+    def test_follow_us_dropdown_can_select_sales(self):
         """Test that the 'All departments' dropdown menu can select 'Sales'."""
         dropdown_page = DropdownPage(self.driver)
         dropdown_page.navigate()
