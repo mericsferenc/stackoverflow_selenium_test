@@ -43,6 +43,15 @@ class StackOverflowTestSuite(unittest.TestCase):
     def tearDown(self):
         """Quit the WebDriver after each test."""
         self.driver.quit()
+        
+    def test_scroll_to_bottom(self):
+        """Test scrolling to the bottom of the page using JavaScriptExecutor."""
+        js_page = JavaScriptExecutorPage(self.driver)
+        js_page.navigate()
+        js_page.wait_for_page_load()
+        js_page.scroll_to_bottom()
+        scroll_position = js_page.get_scroll_position()
+        self.assertGreater(scroll_position, 0, "Scroll position should be greater than zero after scrolling down")
 
     def test_user_can_login_and_logout_successfully(self):
         """Test that a user can log in and log out successfully."""
@@ -126,15 +135,6 @@ class StackOverflowTestSuite(unittest.TestCase):
         radio_page.select_account_issue()
         self.assertTrue(radio_page.is_account_issue_selected(), "Radio button Account Issue should be selected")
         
-    def test_scroll_to_bottom(self):
-        """Test scrolling to the bottom of the page using JavaScriptExecutor."""
-        js_page = JavaScriptExecutorPage(self.driver)
-        js_page.navigate()
-        js_page.wait_for_page_load()
-        js_page.scroll_to_bottom()
-        scroll_position = js_page.get_scroll_position()
-        self.assertGreater(scroll_position, 0, "Scroll position should be greater than zero after scrolling down")
-
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(StackOverflowTestSuite)
     result = unittest.TextTestRunner(verbosity=2).run(suite)
