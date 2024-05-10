@@ -130,10 +130,13 @@ class StackOverflowTestSuite(unittest.TestCase):
         """Test scrolling to the bottom of the page using JavaScriptExecutor."""
         js_page = JavaScriptExecutorPage(self.driver)
         js_page.navigate()
+        js_page.wait_for_page_load()
         js_page.scroll_to_bottom()
         scroll_position = js_page.get_scroll_position()
         self.assertGreater(scroll_position, 0, "Scroll position should be greater than zero after scrolling down")
 
-
 if __name__ == '__main__':
-    unittest.main()
+    suite = unittest.TestLoader().loadTestsFromTestCase(StackOverflowTestSuite)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    if result.wasSuccessful():
+        print("\nAll tests were successful!")
