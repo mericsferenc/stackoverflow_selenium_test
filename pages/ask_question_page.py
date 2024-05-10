@@ -2,12 +2,20 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 class AskQuestionPage(BasePage):
     ASK_QUESTION_BUTTON = (By.CSS_SELECTOR, "a[href='/questions/ask']")
     TITLE_INPUT = (By.ID, 'title')
     NEXT_BUTTON = (By.XPATH, "//button[contains(text(), 'Next')]")
     COOKIE_CONSENT = (By.XPATH, "//button[contains(text(), 'Accept all cookies')]")
+
+    OPTANON_CONSENT = os.getenv('OPTANON_CONSENT')
+    EUPUBCONSENT_V2 = os.getenv('EUPUBCONSENT_V2')
 
     def navigate(self):
         self.navigate_to("https://stackoverflow.com")
@@ -37,11 +45,7 @@ class AskQuestionPage(BasePage):
         consent_cookies = [
             {
                 'name': 'OptanonConsent',
-                'value': ('isGpcEnabled=0&datestamp=Fri+May+10+2024+20%3A37%3A25+GMT%2B0200'
-                          '+(k%C3%B6z%C3%A9p-eur%C3%B3pai+ny%C3%A1ri+id%C5%91)&version=202312.1.0&'
-                          'isIABGlobal=false&hosts=&consentId=0443a6dd-dfa1-4281-b254-a81bd54d40fa&'
-                          'interactionCount=1&landingPath=NotLandingPage&groups=C0001%3A1%2CC0003%3A1'
-                          '%2CC0004%3A1%2CC0002%3A1&browserGpcFlag=0&geolocation=HU%3BZA&AwaitingReconsent=false'), # NOTE: should go to .env file like password, this is just for testing
+                'value': self.OPTANON_CONSENT,
                 'domain': '.stackoverflow.com',
                 'path': '/',
                 'secure': True,
@@ -49,7 +53,7 @@ class AskQuestionPage(BasePage):
             },
             {
                 'name': 'eupubconsent-v2',
-                'value': 'CP4uyRgP4uyRgAcABBENAkEwAP_AAAAAACiQF5wBAAGAAgANAAvMAAAAgSACAvMdABAXmSgAgLzKQAQF5gAA.f_gAAAAAAAAA', # NOTE: should go to .env file like password, this is just for testing
+                'value': self.EUPUBCONSENT_V2,
                 'domain': '.stackoverflow.com',
                 'path': '/',
                 'secure': True,
